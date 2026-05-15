@@ -1,9 +1,11 @@
 from sklearn.datasets import fetch_california_housing
-import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split #added for plotting
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
+#importing necessary libraries for data manipulation, visualization, and numerical operations
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Load California Housing dataset
 housing = fetch_california_housing(as_frame=True)
@@ -46,7 +48,6 @@ mlp = MLPRegressor(
 #Fit the model to the training data
 mlp.fit(X_train_scaled, y_train)
 
-
 # Evaluate the model on the validation set
 val_score = mlp.score(X_val_scaled, y_val)
 print("Validation R^2 Score:", val_score)
@@ -57,3 +58,70 @@ print("Test R^2 Score:", test_score)
 
 #both of the above our scores give a result over .74 which means that our fitted model is able to represent over 74% of the data variance. 
 # This is a good result for a regression model, indicating that it has learned to capture the underlying patterns in the data effectively. 
+
+#Predictions for train, validation, and test sets
+y_train_pred = mlp.predict(X_train_scaled)
+y_val_pred = mlp.predict(X_val_scaled)
+y_test_pred = mlp.predict(X_test_scaled)
+
+#Print the first 5 predictions for each set
+print("Predictions for Training Set:", y_train_pred[:5])
+print("Predictions for Validation Set:", y_val_pred[:5])
+print("Predictions for Test Set:", y_test_pred[:5]) 
+
+#Create scatterplot of predicted vs actual for Training data
+plt.figure(figsize=(6,6))
+plt.scatter(y_train, y_train_pred, alpha=0.3, s=10)
+#Plot a reference line
+lo = min(np.min(y_train), np.min(y_train_pred))
+hi = max(np.max(y_train), np.max(y_train_pred))
+plt.plot([lo, hi], [lo, hi], linewidth=1, color='red') 
+#Set Axis ranges
+plt.xlim(0,6)
+plt.ylim(0,6)
+#Set labels and title
+plt.xlabel("Actual MedHouseVal")
+plt.ylabel("Predicted MedHouseVal")
+plt.title("Predicted vs Actual — Train")
+plt.tight_layout()
+plt.savefig("figures/train_actual_vs_pred.png")
+plt.show()
+plt.close()
+
+#Create scatterplot of predicted vs actual for Validation data
+plt.figure(figsize=(6,6))
+plt.scatter(y_val, y_val_pred, alpha=0.3, s=10)
+#Plot a reference line
+lo = min(np.min(y_val), np.min(y_val_pred))
+hi = max(np.max(y_val), np.max(y_val_pred))
+plt.plot([lo, hi], [lo, hi], linewidth=1, color='red') 
+#Set Axis ranges
+plt.xlim(0,6)
+plt.ylim(0,6)
+#Set labels and title
+plt.xlabel("Actual MedHouseVal")
+plt.ylabel("Predicted MedHouseVal")
+plt.title("Predicted vs Actual — Validation")
+plt.tight_layout()
+plt.savefig("figures/validation_actual_vs_pred.png")
+plt.show()
+plt.close()
+
+#Create scatterplot of predicted vs actual for Test data
+plt.figure(figsize=(6,6))
+plt.scatter(y_test, y_test_pred, alpha=0.3, s=10)
+#Plot a reference line
+lo = min(np.min(y_test), np.min(y_test_pred))
+hi = max(np.max(y_test), np.max(y_test_pred))
+plt.plot([lo, hi], [lo, hi], linewidth=1, color='red') 
+#Set Axis ranges
+plt.xlim(0,6)
+plt.ylim(0,6)
+#Set labels and title
+plt.xlabel("Actual MedHouseVal")
+plt.ylabel("Predicted MedHouseVal")
+plt.title("Predicted vs Actual — Test")
+plt.tight_layout()
+plt.savefig("figures/test_actual_vs_pred.png")
+plt.show()
+plt.close()
